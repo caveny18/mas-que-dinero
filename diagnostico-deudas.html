@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0B1F33" />
+  <meta name="description" content="Radiografía de Deudas de Más que Dinero. Descubre qué tan pesadas están tus deudas y tu capacidad real de pago en 2 minutos." />
+  <title>Diagnóstico de Deudas — Más que Dinero</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --navy: #0B1F33;
+      --navy-2: #102B45;
+      --cream: #F7F5EF;
+      --paper: #FFFFFF;
+      --mint: #B9E6D3;
+      --green: #16866B;
+      --green-dark: #0D6A55;
+      --ink: #14202B;
+      --muted: #65717C;
+      --line: #DFE5E4;
+      --soft: #EDF5F1;
+      --yellow: #F2D77A;
+      --danger: #C84D42;
+      --shadow: 0 18px 45px rgba(11,31,51,.08);
+      --radius: 20px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: "DM Sans", system-ui, sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      line-height: 1.5;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; cursor: pointer; border: none; }
+
+    /* Topbar Header */
+    .topbar {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+      height: 78px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 500;
+      letter-spacing: -.03em;
+      color: var(--navy);
+      white-space: nowrap;
+    }
+    .brand strong { font-weight: 700; }
+    .brand-mark {
+      width: 31px;
+      height: 31px;
+      display: inline-flex;
+      align-items: flex-end;
+      gap: 3px;
+      padding: 5px;
+      border-radius: 9px;
+      background: var(--navy);
+      transform: rotate(-5deg);
+    }
+    .brand-mark span { display: block; width: 7px; border-radius: 2px; background: var(--mint); }
+    .brand-mark span:first-child { height: 12px; }
+    .brand-mark span:last-child { height: 20px; }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: .88rem;
+      font-weight: 700;
+      color: var(--muted);
+      transition: .2s;
+    }
+    .back-btn:hover { color: var(--navy); }
+
+    /* Main Container */
+    .tool-container {
+      width: min(840px, calc(100% - 32px));
+      margin: 20px auto 80px;
+    }
+
+    .tool-header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+    .eyebrow {
+      font-size: .72rem;
+      font-weight: 800;
+      letter-spacing: .15em;
+      color: var(--green);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .tool-header h1 {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      letter-spacing: -.05em;
+      color: var(--navy);
+      line-height: 1.05;
+    }
+    .tool-header p {
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 580px;
+      margin: 12px auto 0;
+    }
+
+    /* Card Form */
+    .card {
+      background: var(--paper);
+      border-radius: var(--radius);
+      padding: 36px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--line);
+      margin-bottom: 32px;
+    }
+
+    .form-group {
+      margin-bottom: 24px;
+    }
+    .form-group:last-child { margin-bottom: 0; }
+    
+    .field-label {
+      display: block;
+      font-size: .9rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+    .field-desc {
+      font-size: .78rem;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .input-wrapper input {
+      width: 100%;
+      height: 48px;
+      border: 1.5px solid var(--line);
+      border-radius: 12px;
+      padding: 0 36px 0 16px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--navy);
+      background: white;
+      outline: none;
+      transition: .2s;
+    }
+    .input-wrapper input:focus {
+      border-color: var(--navy);
+      box-shadow: 0 0 0 3px rgba(11,31,51,.08);
+    }
+    .input-unit {
+      position: absolute;
+      right: 16px;
+      font-size: .9rem;
+      font-weight: 700;
+      color: var(--muted);
+      pointer-events: none;
+    }
+
+    .analyze-btn {
+      width: 100%;
+      background: var(--navy);
+      color: white;
+      padding: 18px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 1.05rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 32px;
+      transition: .22s ease;
+      box-shadow: 0 10px 25px rgba(11,31,51,.15);
+    }
+    .analyze-btn:hover {
+      background: var(--navy-2);
+      transform: translateY(-2px);
+    }
+
+    /* Results Section */
+    .results-section {
+      display: none;
+      animation: fadeIn .4s ease forwards;
+    }
+    .results-section.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Risk Gauge Box */
+    .risk-card {
+      background: var(--navy);
+      color: white;
+      border-radius: var(--radius);
+      padding: 36px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 32px;
+      align-items: center;
+      margin-bottom: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .risk-status-badge {
+      font-size: .75rem;
+      font-weight: 800;
+      padding: 6px 14px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+    .badge-verde { background: var(--mint); color: var(--navy); }
+    .badge-amarillo { background: var(--yellow); color: #6B5200; }
+    .badge-rojo { background: #FCE8E6; color: var(--danger); }
+
+    .ratio-circle {
+      width: 115px;
+      height: 115px;
+      border-radius: 50%;
+      display: grid;
+      place-content: center;
+      position: relative;
+      text-align: center;
+      background: rgba(255,255,255,.1);
+      border: 3px solid rgba(255,255,255,.2);
+      flex-shrink: 0;
+    }
+    .ratio-circle.verde { border-color: var(--mint); color: var(--mint); }
+    .ratio-circle.amarillo { border-color: var(--yellow); color: var(--yellow); }
+    .ratio-circle.rojo { border-color: #FF8F85; color: #FF8F85; }
+
+    .ratio-num {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 2.2rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+    .ratio-label {
+      font-size: .65rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #A0B2C0;
+      margin-top: 4px;
+    }
+
+    .risk-info h2 {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.6rem;
+      letter-spacing: -.03em;
+      margin-bottom: 8px;
+    }
+    .risk-info p {
+      color: #C0D1DD;
+      font-size: .95rem;
+      line-height: 1.5;
+    }
+
+    /* Comparison Metrics Grid */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+    .metric-card {
+      background: var(--paper);
+      border-radius: var(--radius);
+      padding: 24px;
+      border: 1px solid var(--line);
+    }
+    .metric-card span {
+      display: block;
+      font-size: .78rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      margin-bottom: 6px;
+    }
+    .metric-card strong {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.6rem;
+      color: var(--navy);
+      display: block;
+    }
+    .metric-card small {
+      font-size: .78rem;
+      color: var(--muted);
+      display: block;
+      margin-top: 4px;
+    }
+
+    /* Carlos Recommendation Box */
+    .carlos-box {
+      background: var(--paper);
+      border-radius: var(--radius);
+      padding: 32px;
+      border: 1px solid var(--line);
+      margin-bottom: 32px;
+      border-left: 5px solid var(--navy);
+    }
+    .carlos-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .carlos-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: var(--mint);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: .9rem;
+    }
+    .carlos-title h3 {
+      font-size: 1.05rem;
+      color: var(--navy);
+    }
+    .carlos-title p {
+      font-size: .75rem;
+      color: var(--muted);
+    }
+
+    .carlos-body {
+      color: var(--ink);
+      font-size: .98rem;
+      line-height: 1.6;
+    }
+    .carlos-body strong { color: var(--navy); }
+
+    /* CTA to Next Tool */
+    .next-tool-cta {
+      background: var(--soft);
+      border-radius: var(--radius);
+      padding: 28px;
+      border: 1px solid #CDE2DA;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .next-tool-info h4 {
+      font-size: 1.1rem;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+    .next-tool-info p {
+      font-size: .85rem;
+      color: var(--muted);
+    }
+    .next-btn {
+      background: var(--green);
+      color: white;
+      padding: 12px 22px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: .9rem;
+      white-space: nowrap;
+      transition: .2s;
+    }
+    .next-btn:hover {
+      background: var(--green-dark);
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 680px) {
+      .card, .risk-card, .carlos-box { padding: 24px; }
+      .risk-card { grid-template-columns: 1fr; text-align: center; }
+      .ratio-circle { margin: 0 auto; }
+      .metrics-grid { grid-template-columns: 1fr; }
+      .next-tool-cta { flex-direction: column; text-align: center; align-items: stretch; }
+      .next-btn { text-align: center; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="topbar">
+    <a href="index.html" class="brand" aria-label="Más que Dinero - inicio">
+      <span class="brand-mark"><span></span><span></span></span>
+      <span>Más que <strong>Dinero</strong></span>
+    </a>
+    <a href="index.html" class="back-btn">← Volver al inicio</a>
+  </header>
+
+  <main class="tool-container">
+    <div class="tool-header">
+      <div class="eyebrow">✦ DIAGNÓSTICO RÁPIDO DE DEUDAS</div>
+      <h1>¿Qué tan pesadas están mis deudas?</h1>
+      <p>Descubre en 1 minuto cuál es tu nivel real de endeudamiento y si tus cuotas mensuales están en una zona segura o de riesgo.</p>
+    </div>
+
+    <div class="card">
+      <div class="form-group">
+        <label class="field-label" for="income">1. Tu ingreso neto mensual libre</label>
+        <p class="field-desc">¿Cuánto dinero te entra libre al mes después de impuestos o descuentos?</p>
+        <div class="input-wrapper">
+          <input type="number" id="income" placeholder="Ej. 3000" min="0" />
+          <span class="input-unit">S/</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="field-label" for="debt-payments">2. Total de cuotas que pagas al mes</label>
+        <p class="field-desc">Suma los pagos mínimos de tarjetas, cuotas de préstamos, compras a plazos o deudas a terceros.</p>
+        <div class="input-wrapper">
+          <input type="number" id="debt-payments" placeholder="Ej. 900" min="0" />
+          <span class="input-unit">S/</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="field-label" for="total-debt">3. Monto total acumulado que debes (Opcional)</label>
+        <p class="field-desc">El saldo total sumando todos tus préstamos o tarjetas pendientes de pago.</p>
+        <div class="input-wrapper">
+          <input type="number" id="total-debt" placeholder="Ej. 12000" min="0" />
+          <span class="input-unit">S/</span>
+        </div>
+      </div>
+
+      <button class="analyze-btn" onclick="runDebtAnalysis()">
+        Ver radiografía de mis deudas <span>→</span>
+      </button>
+    </div>
+
+    <!-- SECCIÓN DE RESULTADOS -->
+    <div class="results-section" id="results">
+      
+      <!-- Box de Riesgo principal -->
+      <div class="risk-card">
+        <div class="ratio-circle" id="risk-circle">
+          <div>
+            <div class="ratio-num" id="ratio-val">0%</div>
+            <div class="ratio-label">De tus ingresos</div>
+          </div>
+        </div>
+
+        <div class="risk-info">
+          <span class="risk-status-badge" id="risk-badge">Cargando...</span>
+          <h2 id="risk-title">Diagnóstico de Deuda</h2>
+          <p id="risk-desc">Generando análisis personalizado...</p>
+        </div>
+      </div>
+
+      <!-- Métricas comparativas -->
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <span>Límite Máximo Recomendado (30%)</span>
+          <strong id="max-safe-val">S/ 0</strong>
+          <small>El monto máximo en cuotas que deberías pagar para estar tranquilo.</small>
+        </div>
+
+        <div class="metric-card">
+          <span>Margen Disponible para Cuotas</span>
+          <strong id="margin-val">S/ 0</strong>
+          <small id="margin-desc">Espacio seguro restante antes de entrar en zona de riesgo.</small>
+        </div>
+      </div>
+
+      <!-- Consejo de Carlos -->
+      <div class="carlos-box">
+        <div class="carlos-header">
+          <div class="carlos-avatar">C</div>
+          <div class="carlos-title">
+            <h3>El consejo de Carlos</h3>
+            <p>Fundador de Más que Dinero</p>
+          </div>
+        </div>
+        <div class="carlos-body" id="carlos-advice">
+          <!-- Generado dinámicamente -->
+        </div>
+      </div>
+
+      <!-- Siguiente paso / CTA -->
+      <div class="next-tool-cta">
+        <div class="next-tool-info">
+          <h4>¿Quieres armar un plan para liquidar tus deudas?</h4>
+          <p>Usa la herramienta comparativa para saber en qué orden pagarlas y ahorrar intereses.</p>
+        </div>
+        <a href="avalancha-vs-boladenieve.html" class="next-btn">Probar Avalancha vs Bola de Nieve →</a>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    function runDebtAnalysis() {
+      const income = parseFloat(document.getElementById('income').value) || 0;
+      const debtPayments = parseFloat(document.getElementById('debt-payments').value) || 0;
+      const totalDebt = parseFloat(document.getElementById('total-debt').value) || 0;
+
+      if (income <= 0) {
+        alert('Por favor ingresa un monto de ingreso neto mensual válido.');
+        return;
+      }
+
+      // Calculations
+      const ratio = Math.round((debtPayments / income) * 100);
+      const maxSafePayment = Math.round(income * 0.30); // 30% standard rule
+      const remainingMargin = maxSafePayment - debtPayments;
+
+      // Elements
+      const resultsEl = document.getElementById('results');
+      const ratioValEl = document.getElementById('ratio-val');
+      const circleEl = document.getElementById('risk-circle');
+      const badgeEl = document.getElementById('risk-badge');
+      const titleEl = document.getElementById('risk-title');
+      const descEl = document.getElementById('risk-desc');
+      
+      const maxSafeValEl = document.getElementById('max-safe-val');
+      const marginValEl = document.getElementById('margin-val');
+      const marginDescEl = document.getElementById('margin-desc');
+      const carlosAdviceEl = document.getElementById('carlos-advice');
+
+      // Populate metrics
+      ratioValEl.textContent = `${ratio}%`;
+      maxSafeValEl.textContent = `S/ ${maxSafePayment.toLocaleString('es-PE')}`;
+      
+      if (remainingMargin >= 0) {
+        marginValEl.textContent = `S/ ${remainingMargin.toLocaleString('es-PE')}`;
+        marginValEl.style.color = 'var(--green)';
+        marginDescEl.textContent = 'Aún tienes espacio dentro del margen de seguridad del 30%.';
+      } else {
+        marginValEl.textContent = `- S/ ${Math.abs(remainingMargin).toLocaleString('es-PE')}`;
+        marginValEl.style.color = 'var(--danger)';
+        marginDescEl.textContent = 'Excediste el límite recomendado para no comprometer tus gastos fijos.';
+      }
+
+      // Logic & Risk Levels
+      circleEl.className = 'ratio-circle';
+
+      if (ratio <= 20) {
+        // Zona Segura
+        circleEl.classList.add('verde');
+        badgeEl.className = 'risk-status-badge badge-verde';
+        badgeEl.textContent = '🟢 Zona Segura';
+        titleEl.textContent = 'Tus deudas están totalmente bajo control';
+        descEl.textContent = `Estás destinando solo el ${ratio}% de tu plata a pagar deudas. Es un excelente nivel que te da espacio para ahorrar e invertir.`;
+
+        carlosAdviceEl.innerHTML = `
+          <strong>¡Qué buen manejo de tu plata!</strong> Destinar menos del 20% a pagar deudas significa que el banco o los préstamos no son un dolor de cabeza para ti. <br><br>
+          <strong>Tu siguiente paso inteligente:</strong> Aprovecha esta tranquilidad para potenciar tu futuro. Si aún no tienes un colchón para emergencias, enfoca ese dinero libre en construir tu <strong>Fondo de Emergencia</strong> para no tener que depender de tarjetas en el futuro.
+        `;
+      } else if (ratio <= 35) {
+        // Zona de Alerta
+        circleEl.classList.add('amarillo');
+        badgeEl.className = 'risk-status-badge badge-amarillo';
+        badgeEl.textContent = '🟡 Zona de Alerta';
+        titleEl.textContent = 'Estás en el límite recomendado';
+        descEl.textContent = `Pagar el ${ratio}% de tus ingresos en deudas es manejable, pero cualquier imprevisto te ajustará el presupuesto.`;
+
+        carlosAdviceEl.innerHTML = `
+          Vas bien, pero estás caminando por la raya. Con el <strong>${ratio}%</strong> de tus ingresos comprometidos en cuotas, si hoy se te presenta una emergencia o se te malogra la laptop, te verás obligado a pedir más prestado.<br><br>
+          <strong>Tu siguiente paso concreto:</strong> Pon una pausa a las compras en cuotas con tarjeta de crédito por los próximos 3 meses. Intenta acelerar el pago de la deuda más pequeña para liberar flujo de caja rápido.
+        `;
+      } else {
+        // Zona Crítica
+        circleEl.classList.add('rojo');
+        badgeEl.className = 'risk-status-badge badge-rojo';
+        badgeEl.textContent = '🔴 Zona Crítica (Sobreendeudamiento)';
+        titleEl.textContent = 'Tus deudas están pesadas y necesitan atención';
+        descEl.textContent = `Más de un tercio de tu plata (el ${ratio}%) se va solo en saldar deudas pasadas. Esto reduce peligrosamente tu margen para vivir.`;
+
+        carlosAdviceEl.innerHTML = `
+          <strong>Amigo/a, estás con la soga al cuello y hay que apagar este fuego ya.</strong> Destinar el <strong>${ratio}%</strong> de tu sueldo a pagar deudas no es sostenible y te quita la tranquilidad por completo.<br><br>
+          <strong>Paso de acción inmediato:</strong> 
+          <ol style="margin-top: 8px; margin-left: 20px;">
+            <li><strong>Para la mano:</strong> Cero nuevas compras en cuotas o uso de tarjetas de crédito.</li>
+            <li><strong>Ordena el pago:</strong> Enfócate en pagar las cuotas mínimas de todas tus deudas y pon cada sol extra en la deuda con mayor tasa de interés (método Avalancha).</li>
+          </ol>
+        `;
+      }
+
+      // Display & Scroll
+      resultsEl.classList.add('active');
+      resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0B1F33" />
+  <meta name="description" content="Evaluador de Compras de Más que Dinero. Descubre si esa compra encaja en tu presupuesto, cuántas horas de trabajo te cuesta y si conviene usar cuotas sin intereses." />
+  <title>¿Puedo comprarlo? — Más que Dinero</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --navy: #0B1F33;
+      --navy-2: #102B45;
+      --cream: #F7F5EF;
+      --paper: #FFFFFF;
+      --mint: #B9E6D3;
+      --green: #16866B;
+      --green-dark: #0D6A55;
+      --ink: #14202B;
+      --muted: #65717C;
+      --line: #DFE5E4;
+      --soft: #EDF5F1;
+      --yellow: #F2D77A;
+      --danger: #C84D42;
+      --shadow: 0 18px 45px rgba(11,31,51,.08);
+      --radius: 20px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: "DM Sans", system-ui, sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      line-height: 1.5;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; cursor: pointer; border: none; }
+
+    /* Topbar Header */
+    .topbar {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+      height: 78px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 500;
+      letter-spacing: -.03em;
+      color: var(--navy);
+      white-space: nowrap;
+    }
+    .brand strong { font-weight: 700; }
+    .brand-mark {
+      width: 31px;
+      height: 31px;
+      display: inline-flex;
+      align-items: flex-end;
+      gap: 3px;
+      padding: 5px;
+      border-radius: 9px;
+      background: var(--navy);
+      transform: rotate(-5deg);
+    }
+    .brand-mark span { display: block; width: 7px; border-radius: 2px; background: var(--mint); }
+    .brand-mark span:first-child { height: 12px; }
+    .brand-mark span:last-child { height: 20px; }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: .88rem;
+      font-weight: 700;
+      color: var(--muted);
+      transition: .2s;
+    }
+    .back-btn:hover { color: var(--navy); }
+
+    /* Main Container */
+    .tool-container {
+      width: min(840px, calc(100% - 32px));
+      margin: 20px auto 80px;
+    }
+
+    .tool-header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+    .eyebrow {
+      font-size: .72rem;
+      font-weight: 800;
+      letter-spacing: .15em;
+      color: var(--green);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .tool-header h1 {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      letter-spacing: -.05em;
+      color: var(--navy);
+      line-height: 1.05;
+    }
+    .tool-header p {
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 580px;
+      margin: 12px auto 0;
+    }
+
+    /* Card Form */
+    .card {
+      background: var(--paper);
+      border-radius: var(--radius);
+      padding: 36px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--line);
+      margin-bottom: 32px;
+    }
+
+    .form-group {
+      margin-bottom: 22px;
+    }
+    .form-group:last-child { margin-bottom: 0; }
+    
+    .field-label {
+      display: block;
+      font-size: .9rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+    .field-desc {
+      font-size: .78rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .input-wrapper input, .input-wrapper select {
+      width: 100%;
+      height: 46px;
+      border: 1.5px solid var(--line);
+      border-radius: 12px;
+      padding: 0 16px;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--navy);
+      background: white;
+      outline: none;
+      transition: .2s;
+    }
+    .input-wrapper input:focus, .input-wrapper select:focus {
+      border-color: var(--navy);
+      box-shadow: 0 0 0 3px rgba(11,31,51,.08);
+    }
+    .has-unit input { padding-right: 36px; }
+    .input-unit {
+      position: absolute;
+      right: 16px;
+      font-size: .9rem;
+      font-weight: 700;
+      color: var(--muted);
+      pointer-events: none;
+    }
+
+    .analyze-btn {
+      width: 100%;
+      background: var(--navy);
+      color: white;
+      padding: 18px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 1.05rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 28px;
+      transition: .22s ease;
+      box-shadow: 0 10px 25px rgba(11,31,51,.15);
+    }
+    .analyze-btn:hover {
+      background: var(--navy-2);
+      transform: translateY(-2px);
+    }
+
+    /* Results Section */
+    .results-section {
+      display: none;
+      animation: fadeIn .4s ease forwards;
+    }
+    .results-section.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Decision Display */
+    .decision-hero {
+      background: var(--navy);
+      color: white;
+      border-radius: var(--radius);
+      padding: 36px;
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .decision-badge {
+      font-size: .75rem;
+      font-weight: 800;
+      padding: 6px 14px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+    .badge-verde { background: var(--mint); color: var(--navy); }
+    .badge-amarillo { background: var(--yellow); color: #6B5200; }
+    .badge-rojo { background: #FCE8E6; color: var(--danger); }
+
+    .decision-title {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 700;
+      line-height: 1.1;
+      color: white;
+      margin-bottom: 10px;
+    }
+    .decision-sub {
+      color: #B9C7D1;
+      font-size: .95rem;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    /* Breakdown Grid */
+    .breakdown-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .breakdown-card {
+      background: var(--paper);
+      border-radius: var(--radius);
+      padding: 20px;
+      border: 1px solid var(--line);
+      text-align: center;
+    }
+    .breakdown-card span {
+      display: block;
+      font-size: .75rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      margin-bottom: 6px;
+    }
+    .breakdown-card strong {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.5rem;
+      color: var(--navy);
+    }
+
+    /* Carlos Advice Box */
+    .carlos-box {
+      background: var(--paper);
+      border-radius: var(--radius);
+      padding: 32px;
+      border: 1px solid var(--line);
+      margin-bottom: 32px;
+      border-left: 5px solid var(--navy);
+    }
+    .carlos-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .carlos-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: var(--mint);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: .9rem;
+    }
+    .carlos-title h3 {
+      font-size: 1.05rem;
+      color: var(--navy);
+    }
+    .carlos-title p {
+      font-size: .75rem;
+      color: var(--muted);
+    }
+
+    .carlos-body {
+      color: var(--ink);
+      font-size: .98rem;
+      line-height: 1.6;
+    }
+    .carlos-body strong { color: var(--navy); }
+
+    @media (max-width: 680px) {
+      .breakdown-grid { grid-template-columns: 1fr; }
+      .card, .decision-hero, .carlos-box { padding: 24px; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="topbar">
+    <a href="index.html" class="brand" aria-label="Más que Dinero - inicio">
+      <span class="brand-mark"><span></span><span></span></span>
+      <span>Más que <strong>Dinero</strong></span>
+    </a>
+    <a href="index.html" class="back-btn">← Volver al inicio</a>
+  </header>
+
+  <main class="tool-container">
+    <div class="tool-header">
+      <div class="eyebrow">✦ EVALUADOR DE COMPRAS INTELIGENTE</div>
+      <h1>¿Puedo comprarlo?</h1>
+      <p>Evalúa si ese gasto encaja en tus números, cuántas horas de trabajo te cuesta y cuál es la mejor forma de pagarlo (contado vs. cuotas sin intereses).</p>
+    </div>
+
+    <div class="card">
+      <div class="form-group">
+        <label class="field-label" for="item-name">1. ¿Qué producto o servicio quieres comprar?</label>
+        <p class="field-desc">Escribe la compra que estás evaluando.</p>
+        <div class="input-wrapper">
+          <input type="text" id="item-name" placeholder="Ej. Laptop / Zapatillas / Curso de desarrollo" value="Laptop para trabajo" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="field-label" for="item-price">2. Precio total del producto o servicio</label>
+        <p class="field-desc">Monto total que pagarías hoy.</p>
+        <div class="input-wrapper has-unit">
+          <input type="number" id="item-price" placeholder="Ej. 2400" min="0" value="2400" />
+          <span class="input-unit">S/</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="field-label" for="item-category">3. Tipo de compra</label>
+        <p class="field-desc">Esto nos sirve para evaluar la vida útil contra el plazo de pago.</p>
+        <div class="input-wrapper">
+          <select id="item-category">
+            <option value="duradero" selected>Herramienta de trabajo / Laptop / Electrodoméstico (Duradero +2 años)</option>
+            <option value="estilo">Ropa / Zapatillas / Tecnología opcional (Duradero medio ~1 año)</option>
+            <option value="consumo">Viaje / Salida / Ocio / Gustito (Consumo inmediato)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="field-label" for="monthly-income">4. Tu ingreso neto mensual libre</label>
+        <p class="field-desc">Sueldo o ingresos netos al mes.</p>
+        <div class="input-wrapper has-unit">
+          <input type="number" id="monthly-income" placeholder="Ej. 3500" min="0" value="3500" />
+          <span class="input-unit">S/</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="field-label" for="free-budget">5. Tu dinero libre mensual disponible</label>
+        <p class="field-desc">El monto libre que te queda tras cubrir tus fijos, deudas y ahorro (Opcional, aprox. 20%).</p>
+        <div class="input-wrapper has-unit">
+          <input type="number" id="free-budget" placeholder="Ej. 700" min="0" value="700" />
+          <span class="input-unit">S/</span>
+        </div>
+      </div>
+
+      <button type="button" class="analyze-btn" onclick="evaluatePurchase()">
+        Evaluar esta compra con Carlos <span>→</span>
+      </button>
+    </div>
+
+    <!-- SECCIÓN DE RESULTADOS -->
+    <div class="results-section" id="results">
+      
+      <div class="decision-hero">
+        <span class="decision-badge" id="decision-badge">Cargando...</span>
+        <div class="decision-title" id="decision-title">Evaluando...</div>
+        <div class="decision-sub" id="decision-sub">Cargando sugerencia personalizada...</div>
+      </div>
+
+      <div class="breakdown-grid">
+        <div class="breakdown-card">
+          <span>Costo en Horas de Vida</span>
+          <strong id="hours-cost">0 horas</strong>
+        </div>
+        <div class="breakdown-card">
+          <span>% de tu Dinero Libre del Mes</span>
+          <strong id="pct-free-budget">0%</strong>
+        </div>
+      </div>
+
+      <!-- Consejo de Carlos sobre Cuotas y Pago -->
+      <div class="carlos-box">
+        <div class="carlos-header">
+          <div class="carlos-avatar">C</div>
+          <div class="carlos-title">
+            <h3>¿Cómo pagarlo? El consejo de Carlos</h3>
+            <p>Estrategia de pago inteligente (Contado vs Cuotas sin Intereses)</p>
+          </div>
+        </div>
+        <div class="carlos-body" id="carlos-advice">
+          <!-- Generado dinámicamente -->
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    function evaluatePurchase() {
+      const itemName = document.getElementById('item-name').value.trim() || 'Este producto';
+      const price = parseFloat(document.getElementById('item-price').value) || 0;
+      const category = document.getElementById('item-category').value;
+      const income = parseFloat(document.getElementById('monthly-income').value) || 0;
+      let freeBudget = parseFloat(document.getElementById('free-budget').value) || 0;
+
+      if (price <= 0 || income <= 0) {
+        alert('Por favor ingresa montos válidos para el precio e ingreso mensual.');
+        return;
+      }
+
+      if (freeBudget <= 0) {
+        freeBudget = income * 0.20;
+      }
+
+      // Work hours calculation (based on 160 hrs/month)
+      const hourlyRate = income / 160;
+      const hoursWorkNeeded = Math.round(price / hourlyRate);
+      const daysWorkNeeded = (hoursWorkNeeded / 8).toFixed(1);
+
+      const pctOfFree = Math.round((price / freeBudget) * 100);
+
+      // UI Elements
+      const badgeEl = document.getElementById('decision-badge');
+      const titleEl = document.getElementById('decision-title');
+      const subEl = document.getElementById('decision-sub');
+      const hoursEl = document.getElementById('hours-cost');
+      const pctEl = document.getElementById('pct-free-budget');
+      const adviceEl = document.getElementById('carlos-advice');
+
+      hoursEl.textContent = `${hoursWorkNeeded} hrs (~${daysWorkNeeded} días)`;
+      pctEl.textContent = `${pctOfFree}%`;
+
+      // Main Verdict
+      if (pctOfFree <= 50) {
+        // 🟢 Cómpralo al contado
+        badgeEl.className = 'decision-badge badge-verde';
+        badgeEl.textContent = '🟢 Cómpralo al Contado';
+        titleEl.textContent = `¡Adelante con tu compra!`;
+        subEl.textContent = `${itemName} ocupa solo el ${pctOfFree}% de tu dinero libre del mes. No desarmará tus finanzas.`;
+
+        adviceEl.innerHTML = `
+          <strong>Esta compra cabe perfectamente en tu presupuesto libre de este mes.</strong><br><br>
+          Te cuesta <strong>S/ ${price.toLocaleString('es-PE')}</strong>, equivalente a <strong>${hoursWorkNeeded} horas de trabajo</strong> de tu vida. <br><br>
+          <strong>Recomendación de pago:</strong> Pájalo directo al contado (efectivo o tarjeta de débito) o en 1 sola cuota para sumar puntos/millas, y liquida el total al cierre de tu tarjeta. ¡Disfrútalo sin culpa!
+        `;
+      } else if (pctOfFree <= 150) {
+        // 🟡 Evaluar Cuotas SIN Intereses o Ahorrar 2 meses
+        badgeEl.className = 'decision-badge badge-amarillo';
+        badgeEl.textContent = '🟡 Usar Cuotas sin Intereses O Ahorrar';
+        titleEl.textContent = `Págalo de forma planificada`;
+        subEl.textContent = `De golpe representa el ${pctOfFree}% de tu disponible del mes, pero puedes distribuirlo estratégicamente.`;
+
+        if (category === 'duradero') {
+          // Buenísimo para cuotas sin intereses
+          const suggestedInstallments = price > 1500 ? 6 : 3;
+          const monthlyFee = Math.round(price / suggestedInstallments);
+          const feePctOfFree = Math.round((monthlyFee / freeBudget) * 100);
+
+          adviceEl.innerHTML = `
+            <strong>Aprovecha el poder de las Cuotas SIN Intereses (0% TCEA):</strong><br><br>
+            Como <strong>${itemName}</strong> es una herramienta o bien duradero (te durará más tiempo del que tardarás en pagarla), este es el caso ideal para usar tarjeta de crédito <strong>SÓLO SI ES A 0% INTERESES</strong>.<br><br>
+            <strong>Estrategia recomendada por Carlos:</strong>
+            <ul>
+              <li style="margin-top: 6px;">Dividelo en <strong>${suggestedInstallments} cuotas sin intereses</strong> de aprox. <strong>S/ ${monthlyFee.toLocaleString('es-PE')} / mes</strong>.</li>
+              <li>Esa cuota representa sólo el <strong>${feePctOfFree}%</strong> de tu dinero libre mensual, dejándote espacio tranquilo para tu vida diaria.</li>
+              <li><em>¡Cuidado!</em> Asegúrate con tu banco de que la promoción sea realmente a 0% de interés y no difieras cuotas ordinarias.</li>
+            </ul>
+          `;
+        } else {
+          // Consumo/Estilo -> NO cuotas, mejor junta
+          adviceEl.innerHTML = `
+            <strong>Ojo: No conviene usar cuotas para compras efímeras o de ocio.</strong><br><br>
+            Como es un gasto de estilo de vida o consumo, meterlo en cuotas (incluso sin intereses) suele ser una trampa porque la emoción o el viaje pasa rápido y la deuda se queda por meses ahogando tu flujo de caja.<br><br>
+            <strong>Recomendación de Carlos:</strong> Guarda la mitad de tu disponible durante 2 o 3 meses para pagarlo 100% al contado sin tarjeta.
+          `;
+        }
+      } else {
+        // 🔴 Freno de Mano
+        badgeEl.className = 'decision-badge badge-rojo';
+        badgeEl.textContent = '🔴 Freno de Mano';
+        titleEl.textContent = `Aún no es momento de comprarlo`;
+        subEl.textContent = `Supera ampliamente tu disponible mensual (${pctOfFree}% del dinero libre). Te obligaría a sobreendeudarte.`;
+
+        adviceEl.innerHTML = `
+          <strong>Amigo/a, hacer este gasto hoy va a ahogar tu presupuesto.</strong><br><br>
+          Pagar <strong>S/ ${price.toLocaleString('es-PE')}</strong> te cuesta <strong>${hoursWorkNeeded} horas de vida trabajando</strong> (~${daysWorkNeeded} días completos de sueldo).<br><br>
+          <strong>¿Por qué NO sacarlo en cuotas normales con intereses?</strong><br>
+          Meter un gasto así a 12 o 18 cuotas con intereses bancarios tradicionales (+30% o +40% TCEA) hará que termines pagando hasta un 50% más por el mismo producto.<br><br>
+          <strong>Tu mejor camino:</strong> Si es una herramienta indispensable, busca la promoción de <strong>12 cuotas SIN intereses</strong> que ofrecen varios bancos locales. Si es solo un gusto, estabiliza primero tu fondo de emergencia.
+        `;
+      }
+
+      const resultsEl = document.getElementById('results');
+      resultsEl.classList.add('active');
+      resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  </script>
+</body>
+</html>

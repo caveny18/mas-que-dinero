@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0B1F33" />
+  <meta name="description" content="Comparador de Estrategias de Deuda de Más que Dinero. Descubre qué método te conviene más: Avalancha vs Bola de Nieve." />
+  <title>Avalancha vs. Bola de Nieve — Más que Dinero</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --navy: #0B1F33;
+      --navy-2: #102B45;
+      --cream: #F7F5EF;
+      --paper: #FFFFFF;
+      --mint: #B9E6D3;
+      --green: #16866B;
+      --green-dark: #0D6A55;
+      --ink: #14202B;
+      --muted: #65717C;
+      --line: #DFE5E4;
+      --soft: #EDF5F1;
+      --yellow: #F2D77A;
+      --danger: #C84D42;
+      --shadow: 0 18px 45px rgba(11,31,51,.08);
+      --radius: 20px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: "DM Sans", system-ui, sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      line-height: 1.5;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; cursor: pointer; border: none; }
+
+    /* Topbar Header */
+    .topbar {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+      height: 78px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 500;
+      letter-spacing: -.03em;
+      color: var(--navy);
+      white-space: nowrap;
+    }
+    .brand strong { font-weight: 700; }
+    .brand-mark {
+      width: 31px;
+      height: 31px;
+      display: inline-flex;
+      align-items: flex-end;
+      gap: 3px;
+      padding: 5px;
+      border-radius: 9px;
+      background: var(--navy);
+      transform: rotate(-5deg);
+    }
+    .brand-mark span { display: block; width: 7px; border-radius: 2px; background: var(--mint); }
+    .brand-mark span:first-child { height: 12px; }
+    .brand-mark span:last-child { height: 20px; }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: .88rem;
+      font-weight: 700;
+      color: var(--muted);
+      transition: .2s;
+    }
+    .back-btn:hover { color: var(--navy); }
+
+    /* Main Container */
+    .tool-container {
+      width: min(900px, calc(100% - 32px));
+      margin: 20px auto 80px;
+    }
+
+    .tool-header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+    .eyebrow {
+      font-size: .72rem;
+      font-weight: 800;
+      letter-spacing: .15em;
+      color: var(--green);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .tool-header h1 {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      letter-spacing: -.05em;
+      color: var(--navy);
+      line-height: 1.05;
+    }
+    .tool-header p {
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 620px;
+      margin: 12px auto 0;
+    }
+
+    /* Card Form */
+    .card {
+      background: var(--paper);
+      border-radius: var(--radius);
+      padding: 36px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--line);
+      margin-bottom: 32px;
+    }
+
+    .debts-list {
+      display: grid;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .debt-item-card {
+      background: #F9FAFA;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 20px;
+      position: relative;
+    }
+
+    .debt-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .debt-title-tag {
+      font-size: .82rem;
+      font-weight: 800;
+      color: var(--navy);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+    .remove-btn {
+      color: var(--danger);
+      font-size: .8rem;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: .2s;
+    }
+    .remove-btn:hover { background: #FCE8E6; }
+
+    .debt-inputs-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1fr 1fr;
+      gap: 12px;
+    }
+
+    .field-label {
+      display: block;
+      font-size: .75rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .input-wrapper input, .input-wrapper select {
+      width: 100%;
+      height: 42px;
+      border: 1.5px solid var(--line);
+      border-radius: 10px;
+      padding: 0 12px;
+      font-size: .92rem;
+      font-weight: 700;
+      color: var(--navy);
+      background: white;
+      outline: none;
+      transition: .2s;
+    }
+    .input-wrapper input:focus, .input-wrapper select:focus {
+      border-color: var(--navy);
+    }
+    .has-unit input { padding-right: 30px; }
+    .input-unit {
+      position: absolute;
+      right: 10px;
+      font-size: .8rem;
+      font-weight: 700;
+      color: var(--muted);
+      pointer-events: none;
+    }
+
+    .add-debt-btn {
+      width: 100%;
+      padding: 14px;
+      border: 2px dashed var(--line);
+      border-radius: 14px;
+      color: var(--navy);
+      font-weight: 700;
+      font-size: .9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: .2s;
+      background: transparent;
+    }
+    .add-debt-btn:hover {
+      border-color: var(--navy);
+      background: var(--soft);
+    }
+
+    .extra-payment-box {
+      background: var(--soft);
+      border-radius: 16px;
+      padding: 20px;
+      margin-top: 24px;
+      border: 1px solid #D2E6DE;
+    }
+    .extra-payment-box label {
+      display: block;
+      font-size: .88rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+    .extra-payment-box p {
+      font-size: .78rem;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .analyze-btn {
+      width: 100%;
+      background: var(--navy);
+      color: white;
+      padding: 18px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 1.05rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 28px;
+      transition: .22s ease;
+      box-shadow: 0 10px 25px rgba(11,31,51,.15);
+    }
+    .analyze-btn:hover {
+      background: var(--navy-2);
+      transform: translateY(-2px);
+    }
+
+    /* Results Section */
+    .results-section {
+      display: none;
+      animation: fadeIn .4s ease forwards;
+    }
+    .results-section.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Strategy Comparison Grid */
+    .strategies-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .strategy-card {
+      background: var(--paper);
+      border-radius: var(--radius);
+      padding: 28px;
+      border: 2px solid var(--line);
+      position: relative;
+      transition: .2s;
+    }
+    .strategy-card.recommended {
+      border-color: var(--green);
+      box-shadow: var(--shadow);
+    }
+
+    .strategy-badge {
+      position: absolute;
+      top: -12px;
+      right: 20px;
+      background: var(--green);
+      color: white;
+      font-size: .68rem;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .strategy-header {
+      margin-bottom: 20px;
+    }
+    .strategy-header h3 {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.4rem;
+      color: var(--navy);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .strategy-header p {
+      font-size: .82rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .roadmap-list {
+      display: grid;
+      gap: 12px;
+    }
+    .roadmap-step {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: var(--soft);
+      border-radius: 12px;
+    }
+    .step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: white;
+      font-size: .8rem;
+      font-weight: 800;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+    .step-details strong {
+      display: block;
+      font-size: .9rem;
+      color: var(--navy);
+    }
+    .step-details span {
+      font-size: .75rem;
+      color: var(--muted);
+    }
+
+    /* Carlos Recommendation Box */
+    .carlos-box {
+      background: var(--paper);
+      border-radius: var(--radius);
+      padding: 32px;
+      border: 1px solid var(--line);
+      margin-bottom: 32px;
+      border-left: 5px solid var(--navy);
+    }
+    .carlos-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .carlos-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: var(--mint);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: .9rem;
+    }
+    .carlos-title h3 {
+      font-size: 1.05rem;
+      color: var(--navy);
+    }
+    .carlos-title p {
+      font-size: .75rem;
+      color: var(--muted);
+    }
+
+    .carlos-body {
+      color: var(--ink);
+      font-size: .98rem;
+      line-height: 1.6;
+    }
+    .carlos-body strong { color: var(--navy); }
+
+    @media (max-width: 768px) {
+      .debt-inputs-grid { grid-template-columns: 1fr 1fr; }
+      .strategies-grid { grid-template-columns: 1fr; }
+      .card, .strategy-card, .carlos-box { padding: 22px; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="topbar">
+    <a href="index.html" class="brand" aria-label="Más que Dinero - inicio">
+      <span class="brand-mark"><span></span><span></span></span>
+      <span>Más que <strong>Dinero</strong></span>
+    </a>
+    <a href="index.html" class="back-btn">← Volver al inicio</a>
+  </header>
+
+  <main class="tool-container">
+    <div class="tool-header">
+      <div class="eyebrow">✦ PLAN DE PAGO DE DEUDAS</div>
+      <h1>Avalancha vs. Bola de Nieve</h1>
+      <p>Coloca las deudas que tienes actualmente y descubre cuál es el orden matemático e inteligente para liquidarlas sin abrumarte.</p>
+    </div>
+
+    <div class="card">
+      <div class="debts-list" id="debts-container">
+        <!-- Tarjetas agregadas dinámicamente -->
+      </div>
+
+      <button type="button" class="add-debt-btn" onclick="addDebtRow()">
+        + Agregar otra deuda o tarjeta
+      </button>
+
+      <div class="extra-payment-box">
+        <label for="extra-payment">¿Tienes un monto extra mensual para abonar?</label>
+        <p>Dinero adicional que podrías destinar cada mes exclusivamente a acelerar el pago de tu primera deuda.</p>
+        <div class="input-wrapper has-unit" style="max-width: 250px;">
+          <input type="number" id="extra-payment" placeholder="0.00" min="0" value="100" />
+          <span class="input-unit">S/</span>
+        </div>
+      </div>
+
+      <button type="button" class="analyze-btn" onclick="runComparison()">
+        Comparar estrategias de pago <span>→</span>
+      </button>
+    </div>
+
+    <!-- SECCIÓN DE RESULTADOS -->
+    <div class="results-section" id="results">
+      
+      <div class="strategies-grid">
+        <!-- Avalancha -->
+        <div class="strategy-card recommended" id="card-avalanche">
+          <span class="strategy-badge">Ahorra más dinero</span>
+          <div class="strategy-header">
+            <h3>🏔️ Método Avalancha</h3>
+            <p>Prioriza la deuda con <strong>mayor tasa de interés</strong> para minimizar el costo financiero total.</p>
+          </div>
+          <div class="roadmap-list" id="roadmap-avalanche">
+            <!-- Pasos generados -->
+          </div>
+        </div>
+
+        <!-- Bola de Nieve -->
+        <div class="strategy-card" id="card-snowball">
+          <div class="strategy-header">
+            <h3>☃️ Método Bola de Nieve</h3>
+            <p>Prioriza la deuda con <strong>menor saldo total</strong> para darte victorias psicológicas rápidas.</p>
+          </div>
+          <div class="roadmap-list" id="roadmap-snowball">
+            <!-- Pasos generados -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Consejo de Carlos -->
+      <div class="carlos-box">
+        <div class="carlos-header">
+          <div class="carlos-avatar">C</div>
+          <div class="carlos-title">
+            <h3>¿Cuál estrategia deberías elegir?</h3>
+            <p>El consejo de Carlos (Fundador de Más que Dinero)</p>
+          </div>
+        </div>
+        <div class="carlos-body" id="carlos-advice">
+          <!-- Generado dinámicamente -->
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    let debtIdCounter = 0;
+
+    function init() {
+      addDebtRow('Tarjeta de Crédito A', 2500, 180, '3');
+      addDebtRow('Préstamo Personal', 6000, 350, '2');
+      addDebtRow('Deuda a Familiar / Amigo', 800, 100, '1');
+    }
+
+    function addDebtRow(name = '', balance = '', minPayment = '', rateCategory = '3') {
+      debtIdCounter++;
+      const container = document.getElementById('debts-container');
+
+      const item = document.createElement('div');
+      item.className = 'debt-item-card';
+      item.id = `debt-item-${debtIdCounter}`;
+
+      item.innerHTML = `
+        <div class="debt-header-row">
+          <span class="debt-title-tag">Deuda #${debtIdCounter}</span>
+          <button type="button" class="remove-btn" onclick="removeDebtRow(${debtIdCounter})">✕ Eliminar</button>
+        </div>
+        <div class="debt-inputs-grid">
+          <div>
+            <label class="field-label">Nombre / Entidad</label>
+            <div class="input-wrapper">
+              <input type="text" class="d-name" placeholder="Ej. Tarjeta BCP" value="${name}" />
+            </div>
+          </div>
+          <div>
+            <label class="field-label">Saldo Pendiente</label>
+            <div class="input-wrapper has-unit">
+              <input type="number" class="d-balance" placeholder="0" min="0" value="${balance}" />
+              <span class="input-unit">S/</span>
+            </div>
+          </div>
+          <div>
+            <label class="field-label">Pago Mínimo / Cuota</label>
+            <div class="input-wrapper has-unit">
+              <input type="number" class="d-min" placeholder="0" min="0" value="${minPayment}" />
+              <span class="input-unit">S/</span>
+            </div>
+          </div>
+          <div>
+            <label class="field-label">Tasa de Interés</label>
+            <div class="input-wrapper">
+              <select class="d-rate">
+                <option value="3" ${rateCategory === '3' ? 'selected' : ''}>Alta (+30% / Tarjetas)</option>
+                <option value="2" ${rateCategory === '2' ? 'selected' : ''}>Media (~15-25% / Préstamos)</option>
+                <option value="1" ${rateCategory === '1' ? 'selected' : ''}>Baja / 0% (Amigos, Casa)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      `;
+
+      container.appendChild(item);
+    }
+
+    function removeDebtRow(id) {
+      const items = document.querySelectorAll('.debt-item-card');
+      if (items.length <= 1) {
+        alert('Debes mantener al menos una deuda registrada.');
+        return;
+      }
+      const item = document.getElementById(`debt-item-${id}`);
+      if (item) item.remove();
+    }
+
+    function getDebtsFromUI() {
+      const items = document.querySelectorAll('.debt-item-card');
+      const debts = [];
+
+      items.forEach((item, index) => {
+        const name = item.querySelector('.d-name').value.trim() || `Deuda #${index + 1}`;
+        const balance = parseFloat(item.querySelector('.d-balance').value) || 0;
+        const minPayment = parseFloat(item.querySelector('.d-min').value) || 0;
+        const ratePriority = parseInt(item.querySelector('.d-rate').value) || 1;
+
+        if (balance > 0) {
+          debts.push({ name, balance, minPayment, ratePriority });
+        }
+      });
+
+      return debts;
+    }
+
+    function runComparison() {
+      const debts = getDebtsFromUI();
+      const extraPayment = parseFloat(document.getElementById('extra-payment').value) || 0;
+
+      if (debts.length === 0) {
+        alert('Por favor ingresa al menos una deuda con saldo pendiente.');
+        return;
+      }
+
+      // Orden Avalancha: Tasa más alta primero (ratePriority descendente), luego saldo
+      const avalanche = [...debts].sort((a, b) => b.ratePriority - a.ratePriority || b.balance - a.balance);
+
+      // Orden Bola de Nieve: Saldo más pequeño primero (balance ascendente)
+      const snowball = [...debts].sort((a, b) => a.balance - b.balance);
+
+      // Render Roadmap Avalancha
+      renderRoadmap('roadmap-avalanche', avalanche, extraPayment);
+
+      // Render Roadmap Bola de Nieve
+      renderRoadmap('roadmap-snowball', snowball, extraPayment);
+
+      // Render Carlos' Advice
+      const carlosEl = document.getElementById('carlos-advice');
+      
+      carlosEl.innerHTML = `
+        <strong>Ambos métodos funcionan, pero dependen de lo que tú necesites hoy:</strong><br><br>
+        <ul>
+          <li style="margin-bottom: 8px;">
+            <strong>Elige AVALANCHA si eres disciplinado con tus números:</strong> Matemáticamente es la opción más inteligente porque te ahorra la mayor cantidad de dinero en intereses al atacar primero las tarjetas o deudas más caras.
+          </li>
+          <li>
+            <strong>Elige BOLA DE NIEVE si necesitas motivación rápida:</strong> Si sientes frustración por ver muchas cuentas abiertas, este método borra deudas pequeñas rápido. Ver que eliminas la primera deuda en poco tiempo te da un impulso psicológico enorme para no abandonar el plan.
+          </li>
+        </ul>
+        <br>
+        <strong>El truco de oro:</strong> Junta las cuotas de las deudas que vayas eliminando más tu dinero extra de <strong>S/ ${extraPayment}</strong> y ataca con todo la siguiente deuda. ¡No te gastes ese dinero liberado!
+      `;
+
+      // Show Results
+      const resultsEl = document.getElementById('results');
+      resultsEl.classList.add('active');
+      resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function renderRoadmap(containerId, debtList, extra) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+
+      debtList.forEach((debt, idx) => {
+        const isFirst = idx === 0;
+        const totalAllocated = isFirst ? (debt.minPayment + extra) : debt.minPayment;
+
+        const stepEl = document.createElement('div');
+        stepEl.className = 'roadmap-step';
+        stepEl.innerHTML = `
+          <div class="step-num">${idx + 1}</div>
+          <div class="step-details">
+            <strong>${debt.name} ${isFirst ? '🔥 (OBJETIVO #1)' : ''}</strong>
+            <span>Saldo: S/ ${debt.balance.toLocaleString('es-PE')} | Abono mensual sugerido: <strong>S/ ${totalAllocated.toLocaleString('es-PE')}</strong></span>
+          </div>
+        `;
+        container.appendChild(stepEl);
+      });
+    }
+
+    // Inicializar con tarjetas de prueba
+    init();
+  </script>
+</body>
+</html>

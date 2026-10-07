@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0B1F33" />
+  <meta name="description" content="Calculadora de Fondo de Emergencia de Más que Dinero. Descubre tu meta de ahorro ideal según tu estabilidad laboral." />
+  <title>Mi Fondo de Emergencia — Más que Dinero</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --navy: #0B1F33;
+      --navy-2: #102B45;
+      --cream: #F7F5EF;
+      --paper: #FFFFFF;
+      --mint: #B9E6D3;
+      --green: #16866B;
+      --green-dark: #0D6A55;
+      --ink: #14202B;
+      --muted: #65717C;
+      --line: #DFE5E4;
+      --soft: #EDF5F1;
+      --yellow: #F2D77A;
+      --danger: #C84D42;
+      --shadow: 0 18px 45px rgba(11,31,51,.08);
+      --radius: 20px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: "DM Sans", system-ui, sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      line-height: 1.5;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; cursor: pointer; border: none; }
+
+    /* Topbar Header */
+    .topbar {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+      height: 78px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 500;
+      letter-spacing: -.03em;
+      color: var(--navy);
+      white-space: nowrap;
+    }
+    .brand strong { font-weight: 700; }
+    .brand-mark {
+      width: 31px;
+      height: 31px;
+      display: inline-flex;
+      align-items: flex-end;
+      gap: 3px;
+      padding: 5px;
+      border-radius: 9px;
+      background: var(--navy);
+      transform: rotate(-5deg);
+    }
+    .brand-mark span { display: block; width: 7px; border-radius: 2px; background: var(--mint); }
+    .brand-mark span:first-child { height: 12px; }
+    .brand-mark span:last-child { height: 20px; }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: .88rem;
+      font-weight: 700;
+      color: var(--muted);
+      transition: .2s;
+    }
+    .back-btn:hover { color: var(--navy); }
+
+    /* Main Container */
+    .tool-container {
+      width: min(840px, calc(100% - 32px));
+      margin: 20px auto 80px;
+    }
+
+    .tool-header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+    .eyebrow {
+      font-size: .72rem;
+      font-weight: 800;
+      letter-spacing: .15em;
+      color: var(--green);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .tool-header h1 {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      letter-spacing: -.05em;
+      color: var(--navy);
+      line-height: 1.05;
+    }
+    .tool-header p {
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 580px;
+      margin: 12px auto 0;
+    }
+
+    /* Card Form */
+    .card {
+      background: var(--paper);
+      border-radius: var(--radius);
+      padding: 36px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--line);
+      margin-bottom: 32px;
+    }
+
+    .form-group {
+      margin-bottom: 22px;
+    }
+    .form-group:last-child { margin-bottom: 0; }
+    
+    .field-label {
+      display: block;
+      font-size: .9rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+    .field-desc {
+      font-size: .78rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .input-wrapper input, .input-wrapper select {
+      width: 100%;
+      height: 46px;
+      border: 1.5px solid var(--line);
+      border-radius: 12px;
+      padding: 0 16px;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--navy);
+      background: white;
+      outline: none;
+      transition: .2s;
+    }
+    .input-wrapper input:focus, .input-wrapper select:focus {
+      border-color: var(--navy);
+      box-shadow: 0 0 0 3px rgba(11,31,51,.08);
+    }
+    .has-unit input { padding-right: 36px; }
+    .input-unit {
+      position: absolute;
+      right: 16px;
+      font-size: .9rem;
+      font-weight: 700;
+      color: var(--muted);
+      pointer-events: none;
+    }
+
+    .analyze-btn {
+      width: 100%;
+      background: var(--navy);
+      color: white;
+      padding: 18px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 1.05rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 28px;
+      transition: .22s ease;
+      box-shadow: 0 10px 25px rgba(11,31,51,.15);
+    }
+    .analyze-btn:hover {
+      background: var(--navy-2);
+      transform: translateY(-2px);
+    }
+
+    /* Results Section */
+    .results-section {
+      display: none;
+      animation: fadeIn .4s ease forwards;
+    }
+    .results-section.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Main Target Display */
+    .target-hero {
+      background: var(--navy);
+      color: white;
+      border-radius: var(--radius);
+      padding: 36px;
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .target-eyebrow {
+      font-size: .75rem;
+      font-weight: 800;
+      color: var(--mint);
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      margin-bottom: 8px;
+    }
+    .target-amount {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(2.8rem, 6vw, 4.2rem);
+      font-weight: 700;
+      line-height: 1;
+      color: white;
+      margin-bottom: 10px;
+    }
+    .target-sub {
+      color: #B9C7D1;
+      font-size: .95rem;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    /* Breakdown Grid */
+    .breakdown-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .breakdown-card {
+      background: var(--paper);
+      border-radius: var(--radius);
+      padding: 20px;
+      border: 1px solid var(--line);
+      text-align: center;
+    }
+    .breakdown-card span {
+      display: block;
+      font-size: .75rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      margin-bottom: 6px;
+    }
+    .breakdown-card strong {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.4rem;
+      color: var(--navy);
+    }
+
+    /* Carlos Advice Box */
+    .carlos-box {
+      background: var(--paper);
+      border-radius: var(--radius);
+      padding: 32px;
+      border: 1px solid var(--line);
+      margin-bottom: 32px;
+      border-left: 5px solid var(--navy);
+    }
+    .carlos-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .carlos-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: var(--mint);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: .9rem;
+    }
+    .carlos-title h3 {
+      font-size: 1.05rem;
+      color: var(--navy);
+    }
+    .carlos-title p {
+      font-size: .75rem;
+      color: var(--muted);
+    }
+
+    .carlos-body {
+      color: var(--ink);
+      font-size: .98rem;
+      line-height: 1.6;
+    }
+    .carlos-body strong { color: var(--navy); }
+
+    @media (max-width: 680px) {
+      .breakdown-grid { grid-template-columns: 1fr; }
+      .card, .target-hero, .carlos-box { padding: 24px; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="topbar">
+    <a href="index.html" class="brand" aria-label="Más que Dinero - inicio">
+      <span class="brand-mark"><span></span><span></span></span>
+      <span>Más que <strong>Dinero</strong></span>
+    </a>
+    <a href="index.html" class="back-btn">← Volver al inicio</a>
+  </header>
+
+  <main class="tool-container">
+    <div class="tool-header">
+      <div class="eyebrow">✦ COLCHÓN DE TRANQUILIDAD</div>
+      <h1>Mi Fondo de Emergencia</h1>
+      <p>Calcula una meta realista adaptada a tus costos de vida para mantener tu tranquilidad ante cualquier imprevisto.</p>
+    </div>
+
+    <div class="card">
+      <div class="form-group">
+        <label class="field-label" for="fixed-costs">1. Tus gastos fijos mensuales indispensables</label>
+        <p class="field-desc">El dinero básico que necesitas cada mes para sobrevivir (alquiler, comida, luz, agua, servicios y cuotas mínimas).</p>
+        <div class="input-wrapper has-unit">
+          <input type="number" id="fixed-costs" placeholder="Ej. 1800" min="0" value="1800" />
+          <span class="input-unit">S/</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="field-label" for="work-type">2. Tu tipo de trabajo y estabilidad</label>
+        <p class="field-desc">Determina cuántos meses de gastos básicos deberías acumular para estar seguro.</p>
+        <div class="input-wrapper">
+          <select id="work-type">
+            <option value="stable" selected>Empleado Dependiente / Planilla (Estabilidad Alta — 3 Meses)</option>
+            <option value="medium">Contrato Temporal / Comisionista (Estabilidad Media — 4.5 Meses)</option>
+            <option value="freelance">Independiente / Freelancer / Negocio (Ingresos Variables — 6 Meses)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="field-label" for="monthly-saving">3. ¿Cuánto dinero puedes guardar al mes para esta meta?</label>
+        <p class="field-desc">Monto mensual destinado exclusivamente a construir este colchón.</p>
+        <div class="input-wrapper has-unit">
+          <input type="number" id="monthly-saving" placeholder="Ej. 250" min="0" value="250" />
+          <span class="input-unit">S/</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="field-label" for="current-fund">4. ¿Ya tienes algo ahorrado para emergencias? (Opcional)</label>
+        <p class="field-desc">Dinero actual reservado únicamente para imprevistos.</p>
+        <div class="input-wrapper has-unit">
+          <input type="number" id="current-fund" placeholder="Ej. 500" min="0" value="500" />
+          <span class="input-unit">S/</span>
+        </div>
+      </div>
+
+      <button type="button" class="analyze-btn" onclick="calculateEmergencyFund()">
+        Calcular mi meta de fondo de emergencia <span>→</span>
+      </button>
+    </div>
+
+    <!-- SECCIÓN DE RESULTADOS -->
+    <div class="results-section" id="results">
+      
+      <div class="target-hero">
+        <div class="target-eyebrow">✦ TU META DE SEGURIDAD REALISTA</div>
+        <div class="target-amount" id="target-total">S/ 0</div>
+        <div class="target-sub" id="target-sub-desc">Cargando análisis...</div>
+      </div>
+
+      <div class="breakdown-grid">
+        <div class="breakdown-card">
+          <span>Meses de Cobertura</span>
+          <strong id="target-months">0 meses</strong>
+        </div>
+        <div class="breakdown-card">
+          <span>Ahorro Faltante</span>
+          <strong id="missing-amount">S/ 0</strong>
+        </div>
+        <div class="breakdown-card">
+          <span>Tiempo Estimado</span>
+          <strong id="time-estimate">0 meses</strong>
+        </div>
+      </div>
+
+      <!-- Consejo de Carlos -->
+      <div class="carlos-box">
+        <div class="carlos-header">
+          <div class="carlos-avatar">C</div>
+          <div class="carlos-title">
+            <h3>¿Por qué este número es más realista en Latinoamérica?</h3>
+            <p>El consejo de Carlos (Fundador de Más que Dinero)</p>
+          </div>
+        </div>
+        <div class="carlos-body" id="carlos-advice">
+          <!-- Generado dinámicamente -->
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    function calculateEmergencyFund() {
+      const fixedCosts = parseFloat(document.getElementById('fixed-costs').value) || 0;
+      const workType = document.getElementById('work-type').value;
+      const monthlySaving = parseFloat(document.getElementById('monthly-saving').value) || 0;
+      const currentFund = parseFloat(document.getElementById('current-fund').value) || 0;
+
+      if (fixedCosts <= 0) {
+        alert('Por favor ingresa un monto válido de gastos fijos mensuales.');
+        return;
+      }
+
+      // Determine months needed based on work stability
+      let monthsNeeded = 3;
+      if (workType === 'stable') monthsNeeded = 3;
+      else if (workType === 'medium') monthsNeeded = 4.5;
+      else if (workType === 'freelance') monthsNeeded = 6;
+
+      const targetTotal = Math.round(fixedCosts * monthsNeeded);
+      const missingAmount = Math.max(0, targetTotal - currentFund);
+      
+      let monthsToGoal = 0;
+      if (missingAmount > 0 && monthlySaving > 0) {
+        monthsToGoal = Math.ceil(missingAmount / monthlySaving);
+      }
+
+      // UI Rendering
+      document.getElementById('target-total').textContent = `S/ ${targetTotal.toLocaleString('es-PE')}`;
+      document.getElementById('target-months').textContent = `${monthsNeeded} meses`;
+      document.getElementById('missing-amount').textContent = `S/ ${missingAmount.toLocaleString('es-PE')}`;
+      
+      const subDesc = document.getElementById('target-sub-desc');
+      subDesc.textContent = `Calculado sobre tus gastos fijos reales de S/ ${fixedCosts.toLocaleString('es-PE')}/mes para mantenerte protegido sin sobreexigirte.`;
+
+      const timeEl = document.getElementById('time-estimate');
+      if (missingAmount === 0) {
+        timeEl.textContent = '¡Meta alcanzada! 🎉';
+      } else if (monthlySaving <= 0) {
+        timeEl.textContent = 'Define un ahorro mensual';
+      } else {
+        const years = Math.floor(monthsToGoal / 12);
+        const remMonths = monthsToGoal % 12;
+        let timeStr = `${monthsToGoal} meses`;
+        if (years > 0) {
+          timeStr = `${years} año${years > 1 ? 's' : ''} ${remMonths > 0 ? `y ${remMonths} m.` : ''}`;
+        }
+        timeEl.textContent = timeStr;
+      }
+
+      // Carlos' Advice
+      const adviceEl = document.getElementById('carlos-advice');
+      adviceEl.innerHTML = `
+        <strong>Muchos libros de finanzas dicen que debes juntar 3 a 6 meses de tu SUELDO ENTERO, pero en nuestra realidad eso se siente inalcanzable.</strong><br><br>
+        Por eso aquí lo calculamos sobre tus <strong>gastos fijos indispensables</strong> (alquiler, comida, servicios y deudas). Si mañana te quedas sin trabajo o surge una emergencia, no vas a gastar en salidas ni gustitos. Tu verdadera meta de protección es cubrir lo básico para vivir tranquilo.<br><br>
+        <strong>2 Reglas para lograrlo sin abandonar:</strong>
+        <ol style="margin-left: 20px; margin-top: 8px;">
+          <li style="margin-bottom: 6px;"><strong>Guárdalo aparte:</strong> Pon tus <strong>S/ ${monthlySaving}</strong> el mismo día que cobras en una cuenta de alto rendimiento (TREA) independiente de tu tarjeta diaria.</li>
+          <li><strong>No es para ofertas:</strong> Este dinero solo se toca si pierdes tus ingresos, por emergencias médicas o averías graves del hogar/trabajo.</li>
+        </ol>
+      `;
+
+      const resultsEl = document.getElementById('results');
+      resultsEl.classList.add('active');
+      resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  </script>
+</body>
+</html>
